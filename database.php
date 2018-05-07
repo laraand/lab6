@@ -1,17 +1,20 @@
 <?php
     function getDatabaseConnection() {
-        // $host = "localhost";
-        // $username = "alara";
-        // $password = "Love@life1";
-        // $dbname = "shopping_cart_cst_336";
-//mysql://bbfd913fa5082f:a62c8534@us-cdbr-iron-east-05.cleardb.net/heroku_bfccc23dd1cae88?reconnect=true
-        $host = "us-cdbr-iron-east-05.cleardb.net";
-        $username = "bbfd913fa5082f";
-        $password = "a62c8534";
-        $dbname = "heroku_bfccc23dd1cae88";
+        $host = "localhost";
+        $username = "alara";
+        $password = "Love@life1";
+        $dbname = "shopping_cart_cst_336";
+        $charset = 'utf8mb4';
         
         
-        // Create connection
+        //mysql://bbfd913fa5082f:a62c8534@us-cdbr-iron-east-05.cleardb.net/heroku_bfccc23dd1cae88?reconnect=true
+        // $host = "us-cdbr-iron-east-05.cleardb.net";
+        // $username = "bbfd913fa5082f";
+        // $password = "a62c8534";
+        // $dbname = "heroku_bfccc23dd1cae88";
+        
+        
+        // // Create connection
         $dbConn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
         $dbConn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     

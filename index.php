@@ -106,7 +106,7 @@
                     <br/>
                      <input name="show-images" type = "checkbox">Display images
                 </div>
-                 <input type="submit" name="search-submitted" value="Submit" class="btn btn-default">
+                 <input type="submit" name="search-submitted" value="Search" class="btn btn-default">
                  <!--<input type="submit" value="Submit" class="btn btn-default">-->
                 <br /><br />
             </form>
