@@ -4,7 +4,7 @@
         $username = "alara";
         $password = "Love@life1";
         $dbname = "shopping_cart_cst_336";
-        $charset = 'utf8mb4';
+        
         
         
         //mysql://bbfd913fa5082f:a62c8534@us-cdbr-iron-east-05.cleardb.net/heroku_bfccc23dd1cae88?reconnect=true
