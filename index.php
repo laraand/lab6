@@ -30,6 +30,8 @@
     if(isset($_GET['query'])){
         // Get access to our API function
         include 'wmapi.php';
+        $items = getProducts($_GET['query']);
+        
     }
     
 
@@ -69,7 +71,6 @@
                 <div class="form-group">
                     <label for="pName">Product Name</label>
                     <input type="text" class="form-control" name="query" id="pName" placeholder="Name">
-                    <?php displayResults(); ?>
                     Category: 
                     <select  name="category">
                         <?php echo getCategoriesHTML(); ?>
@@ -88,11 +89,12 @@
                 </div>
                 <input type="submit" name="search-submitted" value="Submit" class="btn btn-default">
                 <br /><br />
+                <?php displayResults(); ?>
             </form>
 
             
             <!-- Display Search Results -->
-             <!--<? displayResults();?>-->
+             
             <br/> <br/>
             
             <?php

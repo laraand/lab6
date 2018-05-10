@@ -9,7 +9,7 @@ function displayResults(){
        foreach($items as $item){
            $itemName=$item['name'];
            $itemPrice=$item['price'];
-           $itemImage=$item['image_url'];
+           $itemImage=$item['thumbnailImage'];
            $itemId=$item['item_id'];
            
            //Display item as table row
