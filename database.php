@@ -1,28 +1,26 @@
 <?php
     function getDatabaseConnection() {
-        $host = "localhost";
-        $username = "alara";
-        $password = "Love@life1";
-        $dbname = "shopping_cart_cst_336";
+        // $host = "localhost";
+        // $username = "alara";
+        // $password = "Love@life1";
+        // $dbname = "shopping_cart_cst336";
+        
+        // mysql://bbfd913fa5082f:a62c8534@us-cdbr-iron-east-05.cleardb.net/heroku_bfccc23dd1cae88?reconnect=true
+        $host = "us-cdbr-iron-east-05.cleardb.net";
+        $username = "bbfd913fa5082f";
+        $password = "a62c8534";
+        $dbname = "heroku_bfccc23dd1cae88";
         
         
-        
-        //mysql://bbfd913fa5082f:a62c8534@us-cdbr-iron-east-05.cleardb.net/heroku_bfccc23dd1cae88?reconnect=true
-        // $host = "us-cdbr-iron-east-05.cleardb.net";
-        // $username = "bbfd913fa5082f";
-        // $password = "a62c8534";
-        // $dbname = "heroku_bfccc23dd1cae88";
-        
-        
-        // // Create connection
+        // Create connection
         $dbConn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
         $dbConn -> setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
         return $dbConn; 
     }
     
-   // $db = getDatabaseConnection();
-   function insertItemsIntoDB($items) {
+  // $db = getDatabaseConnection();
+  function insertItemsIntoDB($items) {
         if (!$items) return; 
         
         $db = getDatabaseConnection(); 
@@ -41,40 +39,19 @@
                 itemURL => $itemImage
                 ));
         }
-    }
+  }
     function getMatchingItems($query, $category, $priceFrom, $priceTo, $ordering, $showImages){
         $db = getDatabaseConnection(); 
         $imgSQL =$showImages ? ', item.image_url' : '';  
         
-        $sql = "SELECT DISTINCT item.item_id, item.name, item.price $imgSQL FROM item INNER JOIN item_category ON item.item_id = item_category.item_id INNER JOIN category ON item_category.category_id =category.category_id  WHERE 1"; 
-        if (!empty($query)) {
-            $sql .= " AND name LIKE '%$query%'";
-        }
-         if(!empty($category)) {
-            $sql .= " AND category.category_name = '$category'";
-        }
-        if(!empty($priceFrom)) {
-            $sql .= " AND item.price >= '$priceFrom'";
-        }
-        if (!empty($priceTo)) {
-            $sql .= " AND item.price >= '$priceTo'";
-        }
-           if (!empty($ordering)) {
-            if ($ordering == 'product') {
-                $columnName = 'item.name'; 
-            } else {
-                $columnName = 'item.price'; 
-            }
-           
-            $sql .= " ORDER BY $columnName";
-        }
+        $sql = "SELECT * FROM item WHERE name LIKE '%$query%'"; 
          
         $statement = $db->prepare($sql); 
         
         $statement->execute(); 
         
-        $records = $statement->fetchAll(); 
-        return $records;
+        $items = $statement->fetchAll(); 
+        return $items;
     
     }
     function getCategoriesHTML() {

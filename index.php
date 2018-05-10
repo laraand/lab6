@@ -1,59 +1,38 @@
 <?php
-    include 'functions.php';
-    include 'database.php';
-       
+
     session_start();
+    // Checks to see if the form is submitted
+    
     if(!isset($_SESSION['cart'])){
-       $_SESSION['cart'] = array();
+        $_SESSION['cart'] = array();
     }
     if(isset($_POST['itemName'])){
-       $newItem = array();
-       $newItem['name'] = $_POST['itemName'];
-       $newItem['id'] = $_POST['itemId'];
-       $newItem['price'] = $_POST['itemPrice'];
-       $newItem['image'] = $_POST['itemImage'];
-       
-       foreach($_SESSION['cart'] as &$item){
-           if ($newItem['id'] ==  $item['id']){
-               $item['quantity'] += 1;
-               $found = true;
-           }
-       }
-       
-       if($found != true){
-           $newItem['quantity'] = 1;
-           array_push($_SESSION['cart'], $newItem);
-       }
+        $newItem = array();
+        $newItem['name'] = $_POST['itemName'];
+        $newItem['id'] = $_POST['itemId'];
+        $newItem['price'] = $_POST['itemPrice'];
+        $newItem['image'] = $_POST['itemImage'];
+        $found = false;
+        foreach($_SESSION['cart'] as &$item){
+            if($newItem['id'] == $item['id']){
+                $item['quantity'] += 1;
+                $found = true;
+            }
+        }
+        if($found != true){
+            $newItem['quantity'] = 1;
+            array_push($_SESSION['cart'], $newItem);
+         }
+
     }
-    $category = "";
-    $query = "";
-    $priceFrom = "";
-    $priceTo = "";
-    $ordering  = "";
-    $showImages = false;
-    if(isset($_GET['query'])) {
-                    //$query = $_GET['query'];
-            $query = $_GET['query'];
+    include 'functions.php';
+    include 'database.php';
+    if(isset($_GET['query'])){
+        // Get access to our API function
+        include 'wmapi.php';
     }
-    if (isset($_GET["category"]) && !empty($_GET["category"])) {
-        $category = $_GET["category"]; 
-    }
-    if(isset($_GET["price-from"]) && !empty($_GET["price-from"])) {
-            $priceFrom =  $_GET["price-from"]; 
-    }
-    if (isset($_GET["price-to"]) && !empty($_GET["price-to"])) {
-        $priceTo = $_GET["price-to"];
-    }
-    if (isset($_GET["ordering"]) && !empty($_GET["ordering"])) {
-        $ordering = $_GET["ordering"];
-    }
-    if (isset($_GET["show-images"]) && !empty($_GET["show-images"])) {
-        $showImages = true;
-    }
-    if(isset($_GET['search-submitted'])) {
-                    // form was submitted 
-        $items = getMatchingItems($query, $category, $priceFrom, $priceTo, $ordering, $showImages);
-    }
+    
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,43 +59,76 @@
                         <li><a href='index.php'>Home</a></li>
                         <li><a href='scart.php'>
                         <span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'>
-                        </span> Cart: <?php displayCartCount(); ?></a></li>
+                        </span> Cart: <?php displayCartCount(); ?> </a></li>
                     </ul>
                 </div>
             </nav>
             <br /> <br /> <br />
-            
             <!-- Search Form -->
             <form enctype="text/plain">
                 <div class="form-group">
                     <label for="pName">Product Name</label>
-                   <input type="text" class="form-control" name="query" id="pName" placeholder="Name">
-                  Category:
-                   <select  name="category">
-                      <?php echo getCategoriesHTML(); ?>
+                    <input type="text" class="form-control" name="query" id="pName" placeholder="Name">
+                    <?php displayResults(); ?>
+                    Category: 
+                    <select  name="category">
+                        <?php echo getCategoriesHTML(); ?>
                     </select>
-                    <br/><br/>
+                    <br/>
                     Price:  
                     From: <input type="text" name="price-from" />
                     To: <input type="text" name="price-to" />
-                    <br/><br/>
-                    Order Result by:
-                    <input type="radio" name="ordering" value="product">Product
-                    <input type="radio" name="ordering" value="price">Price
                     <br/>
-                     <input name="show-images" type = "checkbox">Display images
+                    Order Results by: 
+                    <input type="radio" name="ordering" value="product"> Product 
+                    <input type="radio" name="ordering" value="price"> Price
+                    <br/>
+                    <input name="show-images" type="checkbox"> Display images
+                    <br/>
                 </div>
-                 <input type="submit" name="search-submitted" value="Search" class="btn btn-default">
-                 <!--<input type="submit" value="Submit" class="btn btn-default">-->
+                <input type="submit" name="search-submitted" value="Submit" class="btn btn-default">
                 <br /><br />
             </form>
+
             
             <!-- Display Search Results -->
-    
-            <?php
-                displayResults();
-            ?>
+             <!--<? displayResults();?>-->
+            <br/> <br/>
             
+            <?php
+                $category = '';
+                $query = '';
+                $priceFrom = '';
+                $priceTo = '';
+                $ordering = '';
+                $showImages = false;
+                
+                if (isset($_GET["category"]) && !empty($_GET["category"])) {
+                    $category = $_GET["category"]; 
+                }
+                if (isset($_GET["price-from"]) && !empty($_GET["price-from"])) {
+                    $priceFrom =  $_GET["price-from"]; 
+                }
+                if (isset($_GET["price-to"]) && !empty($_GET["price-to"])) {
+                    $priceTo = $_GET["price-to"];
+                }
+                if (isset($_GET["ordering"]) && !empty($_GET["ordering"])) {
+                    $ordering = $_GET["ordering"];
+                }
+                if (isset($_GET["show-images"]) && !empty($_GET["show-images"])) {
+                    $showImages = true;
+                }
+                if(isset($_GET['query'])) {
+                    $query = $_GET['query'];
+                }
+                if (isset($_GET['search-submitted'])) {
+                    // form was submitted 
+                    // pass all the form fields and filters into getMatchItems()
+                    $items = getMatchingItems($query, $category, $priceFrom, $priceTo, $ordering, $showImages);
+                }
+                
+               displayResults(); 
+            ?>
         </div>
     </div>
     </body>
